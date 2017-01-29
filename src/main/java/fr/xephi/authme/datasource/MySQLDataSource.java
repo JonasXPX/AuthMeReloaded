@@ -36,6 +36,8 @@ public class MySQLDataSource implements DataSource {
     private String lastlocX;
     private String lastlocY;
     private String lastlocZ;
+    private String lastlocYaw;
+    private String lastlocPitch;
     private String lastlocWorld;
     private String columnEmail;
     private String columnID;
@@ -57,6 +59,8 @@ public class MySQLDataSource implements DataSource {
         this.lastlocX = Settings.getMySQLlastlocX;
         this.lastlocY = Settings.getMySQLlastlocY;
         this.lastlocZ = Settings.getMySQLlastlocZ;
+        this.lastlocPitch = "pitch";
+        this.lastlocYaw = "yaw";
         this.lastlocWorld = Settings.getMySQLlastlocWorld;
         this.columnSalt = Settings.getMySQLColumnSalt;
         this.columnGroup = Settings.getMySQLColumnGroup;
@@ -98,6 +102,8 @@ public class MySQLDataSource implements DataSource {
                     + lastlocX + " DOUBLE NOT NULL DEFAULT '0.0',"
                     + lastlocY + " DOUBLE NOT NULL DEFAULT '0.0',"
                     + lastlocZ + " DOUBLE NOT NULL DEFAULT '0.0',"
+                    + lastlocYaw + " DOUBLE NOT NULL DEFAULT '0.0',"
+                    + lastlocPitch + " DOUBLE NOT NULL DEFAULT '0.0',"
                     + lastlocWorld + " VARCHAR(255) DEFAULT 'world',"
                     + columnEmail + " VARCHAR(255) DEFAULT 'your@email.com',"
                     + columnLogged + " SMALLINT NOT NULL DEFAULT '0',"
@@ -128,7 +134,7 @@ public class MySQLDataSource implements DataSource {
             rs.close();
             rs = con.getMetaData().getColumns(null, null, tableName, lastlocWorld);
             if (!rs.next()) {
-            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocWorld + " VARCHAR(255) NOT NULL DEFAULT 'world' AFTER " + lastlocZ + ";");
+            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocWorld + " VARCHAR(255) NOT NULL DEFAULT 'world' AFTER " + lastlocPitch + ";");
             }
             rs.close();
             rs = con.getMetaData().getColumns(null, null, tableName, columnEmail);
@@ -144,6 +150,16 @@ public class MySQLDataSource implements DataSource {
             rs = con.getMetaData().getColumns(null, null, tableName, lastlocX);
             if (rs.next()) {
             	st.executeUpdate("ALTER TABLE " + tableName + " MODIFY " + lastlocX + " DOUBLE NOT NULL DEFAULT '0.0', MODIFY " + lastlocY + " DOUBLE NOT NULL DEFAULT '0.0', MODIFY " + lastlocZ + " DOUBLE NOT NULL DEFAULT '0.0';");
+            }  
+            rs.close();
+            rs = con.getMetaData().getColumns(null, null, tableName, lastlocYaw);
+            if(!rs.next()){
+            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocYaw + " DOUBLE NOT NULL DEFAULT '0.0' AFTER " + lastlocZ);
+            }
+            rs.close();
+            rs = con.getMetaData().getColumns(null, null, tableName, lastlocPitch);
+            if(!rs.next()){
+            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocPitch + " DOUBLE NOT NULL DEFAULT '0.0' AFTER " + lastlocYaw);
             }
         } finally {
             close(rs);
@@ -194,14 +210,14 @@ public class MySQLDataSource implements DataSource {
             if (rs.next()) {
             	id = rs.getInt(columnID);
                 if (rs.getString(columnIp).isEmpty() && rs.getString(columnIp) != null) {
-                    pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), "198.18.0.1", rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getString(lastlocWorld),rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                    pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), "198.18.0.1", rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld),rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
                 } else {
                         if(!columnSalt.isEmpty()){
                             if(!columnGroup.isEmpty())
-                            pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getInt(columnGroup), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getString(lastlocWorld), rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
-                            else pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getString(lastlocWorld),rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                            pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getInt(columnGroup), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ),rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld), rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                            else pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ),rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld),rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
                         } else {
-                            pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getString(lastlocWorld), rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                            pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ),rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld), rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
                         }
                  }
                 if (Settings.getPasswordHash == HashAlgorithm.XENFORO) {
@@ -557,12 +573,14 @@ public class MySQLDataSource implements DataSource {
         PreparedStatement pst = null;
         try {
             con = makeSureConnectionIsReady();
-            pst = con.prepareStatement("UPDATE " + tableName + " SET "+ lastlocX + " =?, "+ lastlocY +"=?, "+ lastlocZ +"=?, " + lastlocWorld + "=? WHERE " + columnName + "=?;");
+            pst = con.prepareStatement("UPDATE " + tableName + " SET "+ lastlocX + " =?, "+ lastlocY +"=?, "+ lastlocZ +"=?, " + lastlocYaw + "=?" + lastlocPitch + "=?" + lastlocWorld + "=? WHERE " + columnName + "=?;");
             pst.setDouble(1, auth.getQuitLocX());
             pst.setDouble(2, auth.getQuitLocY());
             pst.setDouble(3, auth.getQuitLocZ());
-            pst.setString(4, auth.getWorld());
-            pst.setString(5, auth.getNickname());
+            pst.setDouble(4, auth.getQuitLocYaw());
+            pst.setDouble(5, auth.getQuitLocPitch());
+            pst.setString(6, auth.getWorld());
+            pst.setString(7, auth.getNickname());
             pst.executeUpdate();
         } catch (SQLException ex) {
             ConsoleLogger.showError(ex.getMessage());

@@ -95,7 +95,7 @@ public class AsyncronousRegister {
     	PlayerAuth auth = null;
 		try {
 			final String hashnew = PasswordSecurity.getHash(Settings.getPasswordHash, password, name);
-    		auth = new PlayerAuth(name, hashnew, getIp(), new Date().getTime(), (int) player.getLocation().getX() , (int) player.getLocation().getY(), (int) player.getLocation().getZ(), player.getLocation().getWorld().getName(), email, realName);
+    		auth = new PlayerAuth(name, hashnew, getIp(), new Date().getTime(), (int) player.getLocation().getX() , (int) player.getLocation().getY(), (int) player.getLocation().getZ(), player.getLocation().getYaw(), player.getLocation().getPitch(), player.getLocation().getWorld().getName(), email, realName);
 		} catch (NoSuchAlgorithmException e) {
 			ConsoleLogger.showError(e.getMessage());
 			m._(player, "error");
@@ -147,7 +147,8 @@ public class AsyncronousRegister {
             PlayerCache.getInstance().addPlayer(auth);
         	database.setLogged(name);
         }
-        plugin.otherAccounts.addPlayer(player.getUniqueId());
+        if(!plugin.getInstance().getServer().getVersion().contains("1.5.2"))
+        	plugin.otherAccounts.addPlayer(player.getUniqueId());
 		ProcessSyncronousPasswordRegister syncronous = new ProcessSyncronousPasswordRegister(player, plugin);
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, syncronous);
         return;

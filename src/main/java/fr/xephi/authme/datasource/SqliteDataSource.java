@@ -31,6 +31,8 @@ public class SqliteDataSource implements DataSource {
     private String lastlocX;
     private String lastlocY;
     private String lastlocZ;
+    private String lastlocYaw;
+    private String lastlocPitch;
     private String lastlocWorld;
     private String columnEmail;
     private String columnID;
@@ -76,6 +78,8 @@ public class SqliteDataSource implements DataSource {
                     + lastlocX + " DOUBLE NOT NULL DEFAULT '0.0',"
                     + lastlocY + " DOUBLE NOT NULL DEFAULT '0.0',"
                     + lastlocZ + " DOUBLE NOT NULL DEFAULT '0.0',"
+                    + lastlocYaw + " DOUBLE NOT NULL DEFAULT '0.0',"
+                    + lastlocPitch + " DOUBLE NOT NULL DEFAULT '0.0',"
                     + lastlocWorld + " VARCHAR(255) DEFAULT 'world',"
                     + columnEmail + " VARCHAR(255) DEFAULT 'your@email.com',"
                     + "CONSTRAINT table_const_prim PRIMARY KEY (" + columnID + "));");
@@ -113,6 +117,17 @@ public class SqliteDataSource implements DataSource {
             if (!rs.next()) {
             	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + columnEmail + "  VARCHAR(255) DEFAULT 'your@email.com';");
             }
+            rs.close();
+            rs = con.getMetaData().getColumns(null, null, tableName, lastlocYaw);
+            if(!rs.next()){
+            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocYaw + " DOUBLE NOT NULL DEFAULT '0.0' AFTER " + lastlocZ);
+            }
+            rs.close();
+            rs = con.getMetaData().getColumns(null, null, tableName, lastlocPitch);
+            if(!rs.next()){
+            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocPitch + " DOUBLE NOT NULL DEFAULT '0.0' AFTER " + lastlocYaw);
+            }
+            
         } finally {
             close(rs);
             close(st);
@@ -149,12 +164,12 @@ public class SqliteDataSource implements DataSource {
             rs = pst.executeQuery();
             if (rs.next()) {
                 if (rs.getString(columnIp).isEmpty() ) {
-                    return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), "198.18.0.1", rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getString(lastlocWorld) , rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                    return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), "198.18.0.1", rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld) , rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
                 } else {
                         if(!columnSalt.isEmpty()){
-                            return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getInt(columnGroup), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getString(lastlocWorld) , rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                            return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getInt(columnGroup), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld) , rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
                         } else {
-                            return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getString(lastlocWorld) , rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                            return new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld) , rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
                         }
                  }
             } else {

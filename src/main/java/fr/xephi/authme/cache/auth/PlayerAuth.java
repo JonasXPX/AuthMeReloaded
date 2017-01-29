@@ -12,6 +12,8 @@ public class PlayerAuth {
     private double x = 0;
     private double y = 0;
     private double z = 0;
+    private float yaw = 0;
+    private float pitch = 0;
     private String world = "world";
     private String salt = "";
     private String vBhash = null;
@@ -36,7 +38,7 @@ public class PlayerAuth {
         this.world = world;
     }
 
-    public PlayerAuth(String nickname, String hash, String ip, long lastLogin, double x, double y, double z, String world, String email, String realName) {
+    public PlayerAuth(String nickname, String hash, String ip, long lastLogin, double x, double y, double z, double yaw, double pitch, String world, String email, String realName) {
         this.nickname = nickname;
         this.hash = hash;
         this.ip = ip;
@@ -44,12 +46,14 @@ public class PlayerAuth {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.yaw = (float)yaw;
+        this.pitch = (float)pitch;
         this.world = world;
         this.email = email;
         this.realName = realName;
     }
 
-    public PlayerAuth(String nickname, String hash, String salt, int groupId, String ip, long lastLogin, double x, double y, double z, String world,  String email, String realName) {
+    public PlayerAuth(String nickname, String hash, String salt, int groupId, String ip, long lastLogin, double x, double y, double z, double yaw, double pitch, String world,  String email, String realName) {
         this.nickname = nickname;
         this.hash = hash;
         this.ip = ip;
@@ -57,6 +61,8 @@ public class PlayerAuth {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.yaw = (float)yaw;
+        this.pitch = (float)pitch;
         this.world = world;
         this.salt = salt;
         this.groupId = groupId;
@@ -83,7 +89,7 @@ public class PlayerAuth {
         this.realName = realName;
     }
 
-    public PlayerAuth(String nickname, String hash, String salt, String ip, long lastLogin, double x, double y, double z, String world, String email, String realName) {
+    public PlayerAuth(String nickname, String hash, String salt, String ip, long lastLogin, double x, double y, double z, double yaw, double pitch, String world, String email, String realName) {
         this.nickname = nickname;
         this.hash = hash;
         this.ip = ip;
@@ -91,6 +97,8 @@ public class PlayerAuth {
         this.x = x;
         this.y = y;
         this.z = z;
+        this.yaw = (float)yaw;
+        this.pitch = (float)pitch;
         this.world = world;
         this.salt = salt;
         this.email = email;
@@ -140,6 +148,12 @@ public class PlayerAuth {
     public double getQuitLocZ() {
         return z;
     }
+    public float getQuitLocYaw(){
+    	return yaw;
+    }
+    public float getQuitLocPitch(){
+    	return pitch;
+    }
     public String getEmail() {
     	return email;
     }
@@ -151,7 +165,13 @@ public class PlayerAuth {
     }
     public void setQuitLocZ(double d) {
         this.z = d;
-    }  
+    } 
+    public void setQuitLocYaw(float d){
+    	this.yaw = d;
+    }
+    public void setQuitLocPitch(float d){
+    	this.pitch = d;
+    }
     public long getLastLogin() {
     	try {
     		if (Long.valueOf(lastLogin) == null)

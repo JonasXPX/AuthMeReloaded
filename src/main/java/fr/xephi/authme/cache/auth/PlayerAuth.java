@@ -12,8 +12,8 @@ public class PlayerAuth {
     private double x = 0;
     private double y = 0;
     private double z = 0;
-    private float yaw = 0;
-    private float pitch = 0;
+    private double yaw = 0;
+    private double pitch = 0;
     private String world = "world";
     private String salt = "";
     private String vBhash = null;
@@ -30,11 +30,13 @@ public class PlayerAuth {
         this.realName = realName;
     }
 
-    public PlayerAuth(String nickname, double x, double y, double z, String world) {
+    public PlayerAuth(String nickname, double x, double y, double z, double yaw, double pitch, String world) {
         this.nickname = nickname;
         this.x = x;
         this.y = y;
         this.z = z;
+        this.yaw = yaw;
+        this.pitch = pitch;
         this.world = world;
     }
 
@@ -46,8 +48,8 @@ public class PlayerAuth {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.yaw = (float)yaw;
-        this.pitch = (float)pitch;
+        this.yaw = yaw;
+        this.pitch = pitch;
         this.world = world;
         this.email = email;
         this.realName = realName;
@@ -61,8 +63,8 @@ public class PlayerAuth {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.yaw = (float)yaw;
-        this.pitch = (float)pitch;
+        this.yaw = yaw;
+        this.pitch = pitch;
         this.world = world;
         this.salt = salt;
         this.groupId = groupId;
@@ -97,8 +99,8 @@ public class PlayerAuth {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.yaw = (float)yaw;
-        this.pitch = (float)pitch;
+        this.yaw = yaw;
+        this.pitch = pitch;
         this.world = world;
         this.salt = salt;
         this.email = email;
@@ -148,10 +150,10 @@ public class PlayerAuth {
     public double getQuitLocZ() {
         return z;
     }
-    public float getQuitLocYaw(){
+    public double getQuitLocYaw(){
     	return yaw;
     }
-    public float getQuitLocPitch(){
+    public double getQuitLocPitch(){
     	return pitch;
     }
     public String getEmail() {
@@ -166,10 +168,10 @@ public class PlayerAuth {
     public void setQuitLocZ(double d) {
         this.z = d;
     } 
-    public void setQuitLocYaw(float d){
+    public void setQuitLocYaw(double d){
     	this.yaw = d;
     }
-    public void setQuitLocPitch(float d){
+    public void setQuitLocPitch(double d){
     	this.pitch = d;
     }
     public long getLastLogin() {
@@ -229,7 +231,7 @@ public class PlayerAuth {
 
 	@Override
 	public String toString() {
-		String s = "Player : " + nickname + " ! IP : " + ip + " ! LastLogin : " + lastLogin + " ! LastPosition : " + x + "," + y + "," + z + "," + world
+		String s = "Player : " + nickname + " ! IP : " + ip + " ! LastLogin : " + lastLogin + " ! LastPosition : " + x + "," + y + "," + z + "," + yaw + "," + pitch + "," + world
 		+ " ! Email : " + email + " ! Hash : " + hash + " ! Salt : " + salt + " ! RealName : " + realName;
 		return s;
 			

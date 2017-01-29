@@ -183,12 +183,13 @@ public class MySQLThread extends Thread implements DataSource {
             rs.close();
             rs = con.getMetaData().getColumns(null, null, tableName, lastlocYaw);
             if(!rs.next()){
-            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocYaw + " DOUBLE NOT NULL DEFAULT '0.0' AFTER " + lastlocZ);
+            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocYaw + " DOUBLE NOT NULL DEFAULT '1.0' AFTER " + lastlocZ);
             }
             rs.close();
             rs = con.getMetaData().getColumns(null, null, tableName, lastlocPitch);
             if(!rs.next()){
-            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocPitch + " DOUBLE NOT NULL DEFAULT '0.0' AFTER " + lastlocYaw);
+            	st.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + lastlocPitch + " DOUBLE NOT NULL DEFAULT '1.0' AFTER " + lastlocYaw);
+            	System.out.println("Authme -> Fix TABLE pitch");
             }
         } finally {
             close(rs);
@@ -243,10 +244,11 @@ public class MySQLThread extends Thread implements DataSource {
                 } else {
                         if(!columnSalt.isEmpty()){
                             if(!columnGroup.isEmpty())
-                            pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getInt(columnGroup), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld), rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
-                            else pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld),rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                            pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getInt(columnGroup), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getInt(lastlocYaw), rs.getInt(lastlocPitch), rs.getString(lastlocWorld), rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                            else pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword),rs.getString(columnSalt), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getInt(lastlocYaw), rs.getInt(lastlocPitch), rs.getString(lastlocWorld),rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
                         } else {
-                            pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getDouble(lastlocYaw), rs.getDouble(lastlocPitch), rs.getString(lastlocWorld), rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                            /* -> */ pAuth = new PlayerAuth(rs.getString(columnName), rs.getString(columnPassword), rs.getString(columnIp), rs.getLong(columnLastLogin), rs.getDouble(lastlocX), rs.getDouble(lastlocY), rs.getDouble(lastlocZ), rs.getInt(lastlocYaw), rs.getInt(lastlocPitch), rs.getString(lastlocWorld), rs.getString(columnEmail), API.getPlayerRealName(rs.getString(columnName)));
+                            System.out.println(rs.getInt(lastlocPitch) + " | " + rs.getInt(lastlocYaw));
                         }
                  }
                 if (Settings.getPasswordHash == HashAlgorithm.XENFORO) {
@@ -606,8 +608,8 @@ public class MySQLThread extends Thread implements DataSource {
             pst.setDouble(1, auth.getQuitLocX());
             pst.setDouble(2, auth.getQuitLocY());
             pst.setDouble(3, auth.getQuitLocZ());
-            pst.setDouble(4, auth.getQuitLocYaw());
-            pst.setDouble(5, auth.getQuitLocPitch());
+            pst.setDouble(4, Math.floor(auth.getQuitLocYaw()));
+            pst.setDouble(5, Math.floor(auth.getQuitLocPitch()));
             pst.setString(6, auth.getWorld());
             pst.setString(7, auth.getNickname());
             pst.executeUpdate();

@@ -746,7 +746,7 @@ public class AuthMePlayerListener implements Listener {
 
         if (PlayerCache.getInstance().isAuthenticated(name) && !player.isDead()) {
         	if(Settings.isSaveQuitLocationEnabled && data.isAuthAvailable(name)) {
-        		final PlayerAuth auth = new PlayerAuth(name,loc.getX(),loc.getY(),loc.getZ(),loc.getWorld().getName());
+        		final PlayerAuth auth = new PlayerAuth(name,loc.getX(),loc.getY(),loc.getZ(),loc.getYaw(), loc.getPitch(),loc.getWorld().getName());
         		try {
         			data.updateQuitLoc(auth);
         		} catch (NullPointerException npe) { }
@@ -817,7 +817,7 @@ public class AuthMePlayerListener implements Listener {
       String ip = plugin.getIP(player);
       if ((PlayerCache.getInstance().isAuthenticated(name)) && (!player.isDead())) {
     	  if ((Settings.isSaveQuitLocationEnabled)  && data.isAuthAvailable(name)){
-    		  final PlayerAuth auth = new PlayerAuth(name, loc.getX(), loc.getY(), loc.getZ(),loc.getWorld().getName());
+    		  final PlayerAuth auth = new PlayerAuth(name, loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(), loc.getWorld().getName());
     		  try {
     			  data.updateQuitLoc(auth);
     		  } catch (NullPointerException npe) { }
@@ -1107,7 +1107,7 @@ public class AuthMePlayerListener implements Listener {
         
         Location spawn = plugin.getSpawnLocation(player);
     	if(Settings.isSaveQuitLocationEnabled && data.isAuthAvailable(name)) {
-    		final PlayerAuth auth = new PlayerAuth(name,spawn.getX(),spawn.getY(),spawn.getZ(),spawn.getWorld().getName());
+    		final PlayerAuth auth = new PlayerAuth(name,spawn.getX(),spawn.getY(),spawn.getZ(), spawn.getYaw(), spawn.getPitch(), spawn.getWorld().getName());
     		try {
     			data.updateQuitLoc(auth);
     		} catch (NullPointerException npe) { }

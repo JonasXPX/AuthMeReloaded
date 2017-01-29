@@ -127,7 +127,7 @@ public class Utils {
         return false;
     }
 
-    public void packCoords(double x, double y, double z, String w, final Player pl)
+    public void packCoords(double x, double y, double z, double yaw, double pitch, String w, final Player pl)
     {
     	World theWorld;
     	if (w.equals("unavailableworld")) {
@@ -138,7 +138,8 @@ public class Utils {
     	if (theWorld == null)
 			theWorld = pl.getWorld();
     	final World world = theWorld;
-    	final Location locat = new Location(world, x, y, z);
+    	final Location locat = new Location(world, x, y, z, (float)yaw, (float)pitch);
+    	System.out.println(locat.toString());
 
     	Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override

@@ -55,7 +55,7 @@ public class ProcessSyncronousPlayerLogin implements Runnable {
     }
 
     protected void packQuitLocation() {
-        Utils.getInstance().packCoords(auth.getQuitLocX(), auth.getQuitLocY(), auth.getQuitLocZ(), auth.getWorld(), player);
+        Utils.getInstance().packCoords(auth.getQuitLocX(), auth.getQuitLocY(), auth.getQuitLocZ(), auth.getQuitLocYaw(), auth.getQuitLocPitch(), auth.getWorld(), player);
     }
 
     protected void teleportBackFromSpawn() {

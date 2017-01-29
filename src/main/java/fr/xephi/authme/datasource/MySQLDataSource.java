@@ -573,7 +573,7 @@ public class MySQLDataSource implements DataSource {
         PreparedStatement pst = null;
         try {
             con = makeSureConnectionIsReady();
-            pst = con.prepareStatement("UPDATE " + tableName + " SET "+ lastlocX + " =?, "+ lastlocY +"=?, "+ lastlocZ +"=?, " + lastlocYaw + "=?" + lastlocPitch + "=?" + lastlocWorld + "=? WHERE " + columnName + "=?;");
+            pst = con.prepareStatement("UPDATE " + tableName + " SET "+ lastlocX + " =?, "+ lastlocY +"=?, "+ lastlocZ +"=?, " + lastlocYaw + "=?, " + lastlocPitch + "=?, " + lastlocWorld + "=? WHERE " + columnName + "=?;");
             pst.setDouble(1, auth.getQuitLocX());
             pst.setDouble(2, auth.getQuitLocY());
             pst.setDouble(3, auth.getQuitLocZ());
